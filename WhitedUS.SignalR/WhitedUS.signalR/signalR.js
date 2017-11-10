@@ -270,10 +270,13 @@ function getArgValues(params) {
 }
 
 function handlerErrors(errorMessage, e, errorData) {
-    console.log("Error Message: ", errorMessage);
-    console.log("Exception: ", e);
-    console.log("Error Data: ", errorData);
-
+    if (_client.serviceHandlers.onerror) {
+        _client.serviceHandlers.onerror(errorMessage + " " + errorData);
+    } else {
+        console.log("Error Message: ", errorMessage);
+        console.log("Exception: ", e);
+        console.log("Error Data: ", errorData);
+    }
     //throw errorMessage;
 }
 
@@ -558,7 +561,11 @@ function clientInterface(baseUrl, hubs, reconnectTimeout, doNotStart) {
                             console.log('start::Unauthorized (' + res.statusCode + ')');
                         }
                     } else {
-                        console.log('start::unknown (' + res.statusCode + ')');
+                        if (_client.serviceHandlers.onerror) {
+                            _client.serviceHandlers.onerror(res);
+                        } else {
+                            console.log('start::unknown (' + res.statusCode + ')');
+                        }
                     }
                 } catch (e) {
                     onError('Parse Error', e, startData);
