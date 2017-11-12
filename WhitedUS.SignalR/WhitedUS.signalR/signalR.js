@@ -268,7 +268,7 @@ function getArgValues(params) {
 
     return res;
 }
-
+/*
 function handlerErrors(errorMessage, e, errorData) {
     if (_client.serviceHandlers.onerror) {
         _client.serviceHandlers.onerror(errorMessage + " " + errorData);
@@ -279,7 +279,7 @@ function handlerErrors(errorMessage, e, errorData) {
     }
     //throw errorMessage;
 }
-
+*/
 function buildPayload(hubName, methodName, args, messageId) {
     var data = {
         H: hubName,
@@ -438,6 +438,16 @@ function clientInterface(baseUrl, hubs, reconnectTimeout, doNotStart) {
 		var cb = callCallbacks[messageId];
 		if (cb) cb(err, result);
 	}
+    function handlerErrors(errorMessage, e, errorData) {
+        if (_client.serviceHandlers.onerror) {
+            _client.serviceHandlers.onerror(errorMessage + " " + errorData);
+        } else {
+            console.log("Error Message: ", errorMessage);
+            console.log("Exception: ", e);
+            console.log("Error Data: ", errorData);
+        }
+        //throw errorMessage;
+    }
 	
     client.start = function () {
         _client.getBinding();
